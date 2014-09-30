@@ -75,7 +75,7 @@ editor_cmd = terminal .. " -e " .. editor
 -- user defined programs
 browser    = "firefox"
 gui_editor = "scite"
-musicplr   = terminal .. " -e ncmpcpp "
+musicplr   = "sonata"
 filemanager = "pcmanfm"
 
 local layouts = {
@@ -140,7 +140,7 @@ redshift:attach(
 pacicon = wibox.widget.imagebox()
 spr_updates = wibox.widget.textbox("")
 updates = lain.widgets.abase({
-     timeout = 10,
+     timeout = 1800,
      cmd = "checkupdates | wc -l",
      settings = function ()
         if tonumber(output) == 0 then
@@ -202,7 +202,7 @@ end
 baticon = wibox.widget.imagebox(beautiful.bat)
 batwidget = lain.widgets.bat({
     settings = function()
-        if bat_now.perc == "N/A" then
+        if bat_now.status == "Charging" then
             widget:set_markup(" AC ")
             baticon:set_image(beautiful.ac)
             return
