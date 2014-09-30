@@ -104,7 +104,7 @@ end
 
 if beautiful.wallpaper then
     for s = 1, screen.count() do
-        gears.wallpaper.maximized(beautiful.wallpaper, s, false)
+        gears.wallpaper.maximized(beautiful.wallpaper, s, true)
     end
 end
 
@@ -184,18 +184,37 @@ mpdwidget = lain.widgets.mpd({
 -- ALSA volume
 volicon = wibox.widget.imagebox(beautiful.vol)
 volumewidget = lain.widgets.alsa({
-settings = function()
-if volume_now.status == "off" then
-volicon:set_image(beautiful.vol_mute)
-elseif tonumber(volume_now.level) == 0 then
-volicon:set_image(beautiful.vol_no)
-elseif tonumber(volume_now.level) <= 50 then
-volicon:set_image(beautiful.vol_low)
-else
-volicon:set_image(beautiful.vol)
-end
+    settings = function()
+        if volume_now.status == "off" then
+            volicon:set_image(beautiful.vol_mute)
+        elseif tonumber(volume_now.level) == 0 then
+            volicon:set_image(beautiful.vol_no)
+        elseif tonumber(volume_now.level) <= 50 then
+            volicon:set_image(beautiful.vol_low)
+        else
+        volicon:set_image(beautiful.vol)
+    end
 widget:set_text(" " .. volume_now.level .. "% ")
 end
+})
+
+-- Battery
+baticon = wibox.widget.imagebox(beautiful.bat)
+batwidget = lain.widgets.bat({
+    settings = function()
+        if bat_now.perc == "N/A" then
+            widget:set_markup(" AC ")
+            baticon:set_image(beautiful.ac)
+            return
+        elseif tonumber(bat_now.perc) <= 5 then
+            baticon:set_image(beautiful.bat_empty)
+        elseif tonumber(bat_now.perc) <= 15 then
+            baticon:set_image(beautiful.bat_low)
+        else
+            baticon:set_image(beautiful.bat)
+        end
+        widget:set_markup(" " .. bat_now.perc .. "% ")
+    end
 })
 
 
@@ -291,6 +310,9 @@ for s = 1, screen.count() do
     right_layout:add(spr_updates)
     right_layout:add(pacicon)
     right_layout:add(updates)
+    right_layout:add(small_spr)
+    right_layout:add(baticon)
+    right_layout:add(batwidget)
     right_layout:add(small_spr)
     right_layout:add(volicon)
     right_layout:add(volumewidget)
